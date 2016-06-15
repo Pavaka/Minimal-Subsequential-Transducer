@@ -92,7 +92,36 @@ void State::AddLambdaTransition(char Letter, std::string Output)
 	this->Lambda.insert({ Letter, Output });
 }
 
-void State::GetIsFinal()
+bool State::GetIsFinal() const
 {
 	return this->IsFinal;
 }
+
+std::string State::GetPsi() const
+{
+	return this->Psi;
+}
+
+std::vector<std::pair<char, int>> State::GetDeltaAsSortedVectorOfPairs() const
+{
+	std::vector<std::pair<char, int>> SortedDeltaPairs;
+	SortedDeltaPairs.reserve(this->Delta.size());
+	for (auto It : this->Delta)
+	{
+		SortedDeltaPairs.push_back(std::make_pair(It.first, It.second.Id));
+	}
+	return std::move(SortedDeltaPairs);
+}
+
+std::vector<std::pair<char, std::string>> State::GetLambdaAsSortedVectorOfPairs() const
+{
+	std::vector<std::pair<char, std::string>> SortedLambdaPairs;
+	SortedLambdaPairs.reserve(this->Lambda.size());
+	for (auto It : this->Lambda)
+	{
+		SortedLambdaPairs.push_back(std::make_pair(It.first, It.second));
+	}
+
+	return std::move(SortedLambdaPairs);
+}
+

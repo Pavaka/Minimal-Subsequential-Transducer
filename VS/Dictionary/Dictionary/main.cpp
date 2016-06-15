@@ -9,14 +9,14 @@ int main()
 
 
 	std::unordered_map<State, int> x;
-	x.insert({ state1, 11 });
 	state1.AddDeltaTransition('a', state3);
 	state1.AddLambdaTransition('a', std::string("tuka"));
+	x.insert({ state1, 11 });
 	x.insert({ state2, 10000 });
 	x.insert({ state3, 331 });
 	for (auto It : x)
 	{
-		std::cout << "3";
+		std::cout << "----";
 		std::cout  << It.second << std::endl;
 	}
 
