@@ -125,3 +125,25 @@ std::vector<std::pair<char, std::string>> State::GetLambdaAsSortedVectorOfPairs(
 	return std::move(SortedLambdaPairs);
 }
 
+void State::SetDeltaTransition(char Letter, std::shared_ptr<State>& ToState)
+{
+	this->Delta.erase(this->Delta.find(Letter));
+	this->Delta.insert({ Letter, ToState });
+}
+
+void State::PrintState()
+{
+	std::cout << "State Id = " << this->Id << (this->IsFinal ? " Final" : " Not Final") << std::endl;
+	std::vector<std::pair<char, int>> Deltas = this->GetDeltaAsSortedVectorOfPairs();
+	std::vector<std::pair<char, std::string>> Lambdas = this->GetLambdaAsSortedVectorOfPairs();
+	if (Lambdas.size() == 0)
+	{
+		std::cout << "No Transitions\n";
+	}
+	for (int i = 0; i < Lambdas.size(); ++i)
+	{
+		//this Id Transition Letter To State Output
+		printf("< %d, %c, <%d, %s >>\n", this->Id, Deltas[i].first, Deltas[i].second, Lambdas[i].second.c_str());
+	}
+}
+

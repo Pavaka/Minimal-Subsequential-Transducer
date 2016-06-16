@@ -1,5 +1,6 @@
 #include <unordered_map>
 #include <memory>
+#include <iostream>
 #include "HelperFunctions.h"
 
 static int IdCounter = 0;
@@ -21,6 +22,8 @@ public:
 	//Pair of : <Letter , State Id> 
 	std::vector<std::pair<char, int>> GetDeltaAsSortedVectorOfPairs() const;
 	std::vector<std::pair<char, std::string>> GetLambdaAsSortedVectorOfPairs() const;
+	void SetDeltaTransition(char Letter, std::shared_ptr<State>& ToState);
+	void PrintState();
 };
 
 namespace std

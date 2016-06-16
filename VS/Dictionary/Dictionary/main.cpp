@@ -6,6 +6,7 @@
 
 #include "MyTypes.h"
 #include "Transducer.h"
+#include "Test.h"
 int main()
 {
 	bool ExitProgram = false;
@@ -46,7 +47,7 @@ int main()
 		}
 		else if (Command == "test")
 		{
-			//Test();
+			Test();
 		}
 		else if (Command == "print")
 		{
