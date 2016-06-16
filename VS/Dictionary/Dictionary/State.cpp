@@ -60,12 +60,12 @@ bool State::operator==(const State& Other) const
 
 	for (auto It : this->Delta)
 	{
-		ThisDeltaTransitions.push_back(std::make_pair(It.first, It.second.Id));
+		ThisDeltaTransitions.push_back(std::make_pair(It.first, It.second->Id));
 	}
 
 	for (auto It : Other.Delta)
 	{
-		OtherDeltaTransitions.push_back(std::make_pair(It.first, It.second.Id));
+		OtherDeltaTransitions.push_back(std::make_pair(It.first, It.second->Id));
 	}
 
 	std::sort(ThisDeltaTransitions.begin(), ThisDeltaTransitions.end());
@@ -82,7 +82,7 @@ bool State::operator==(const State& Other) const
 	return true;
 }
 
-void State::AddDeltaTransition(char Letter, State & ToState)
+void State::AddDeltaTransition(char Letter, std::shared_ptr<State>& ToState)
 {
 	this->Delta.insert({ Letter, ToState });
 }
@@ -108,7 +108,7 @@ std::vector<std::pair<char, int>> State::GetDeltaAsSortedVectorOfPairs() const
 	SortedDeltaPairs.reserve(this->Delta.size());
 	for (auto It : this->Delta)
 	{
-		SortedDeltaPairs.push_back(std::make_pair(It.first, It.second.Id));
+		SortedDeltaPairs.push_back(std::make_pair(It.first, It.second->Id));
 	}
 	return std::move(SortedDeltaPairs);
 }

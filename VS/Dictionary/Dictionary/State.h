@@ -1,11 +1,12 @@
 #include <unordered_map>
+#include <memory>
 #include "HelperFunctions.h"
 
 static int IdCounter = 0;
 class State
 {
 private:
-	std::unordered_map<char, State> Delta;
+	std::unordered_map<char, std::shared_ptr<State>> Delta;
 	std::unordered_map<char, std::string> Lambda;
 	std::string Psi;
 	bool IsFinal;
@@ -13,7 +14,7 @@ public:
 	const int Id;
 	State();
 	bool operator==(const State& Other) const;
-	void AddDeltaTransition(char Letter, State& ToState);
+	void AddDeltaTransition(char Letter, std::shared_ptr<State>& ToState);
 	void AddLambdaTransition(char Letter, std::string Output);
 	bool GetIsFinal() const;
 	std::string GetPsi() const;
@@ -29,7 +30,6 @@ namespace std
 	{
 		std::size_t operator()(const State& HashedState) const
 		{
-			
 			std::size_t HashCode(HashedState.GetIsFinal());
 			HashCode += StringToIntHashing(HashedState.GetPsi());
 			std::vector<std::pair<char, int>> SortedDeltaAsPairs(HashedState.GetDeltaAsSortedVectorOfPairs());
