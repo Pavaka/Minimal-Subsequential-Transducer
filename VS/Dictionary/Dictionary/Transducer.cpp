@@ -32,6 +32,22 @@ void Transducer::ReduceToMinimalExceptPrefixInDictionary(std::string & Word)
 }
 void Transducer::IncreaseToMinimalExceptPrefixInDictionary(std::string & Word)
 {
+	if (this->MinimalExceptWord == Word)
+	{
+		return;
+	}
+	int k = this->MinimalExceptWord.size();
+	int m = Word.size();
+	std::cout << k << m << this->T.size();
+	
+	for (int i = k; i < m; ++i)
+	{
+		std::cout << i << this->T.size();
+		T.push_back(std::shared_ptr<State>());
+		//std::cout << "Crash report " << __LINE__ << std::endl;
+		T[i]->SetDeltaTransition(Word[i], T[i+1]);
+	}
+	this->MinimalExceptWord = Word;
 }
 void Transducer::MakeMinimalExceptPrefixInDictionary(std::string& Word)
 {

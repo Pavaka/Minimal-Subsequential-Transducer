@@ -11,6 +11,7 @@ State::State():Id(IdCounter++)
 //not checking the actual rigt languages
 bool State::operator==(const State& Other) const
 {
+	
 	if (this->IsFinal != Other.IsFinal)
 	{
 		return false;
@@ -134,6 +135,7 @@ void State::SetDeltaTransition(char Letter, std::shared_ptr<State>& ToState)
 void State::PrintState()
 {
 	std::cout << "State Id = " << this->Id << (this->IsFinal ? " Final" : " Not Final") << std::endl;
+	std::cout << "Psi = " << this->Psi << std::endl;
 	std::vector<std::pair<char, int>> Deltas = this->GetDeltaAsSortedVectorOfPairs();
 	std::vector<std::pair<char, std::string>> Lambdas = this->GetLambdaAsSortedVectorOfPairs();
 	if (Lambdas.size() == 0)
@@ -145,5 +147,32 @@ void State::PrintState()
 		//this Id Transition Letter To State Output
 		printf("< %d, %c, <%d, %s >>\n", this->Id, Deltas[i].first, Deltas[i].second, Lambdas[i].second.c_str());
 	}
+}
+
+std::shared_ptr<State> State::CopyOfState()
+{
+	std::shared_ptr<State> NewState = std::make_shared<State>();
+	NewState->SetIsFinal(this->IsFinal);
+	NewState->SetPsi(this->Psi);
+	for (auto It : this->Delta)
+	{
+		NewState->AddDeltaTransition(It.first, It.second);
+	}
+
+	for (auto It : this->Lambda)
+	{
+		NewState->AddLambdaTransition(It.first, It.second);
+	}
+	return NewState;
+}
+
+void State::SetIsFinal(bool Finality)
+{
+	this->IsFinal = Finality;
+}
+
+void State::SetPsi(std::string Psi)
+{
+	this->Psi = Psi;
 }
 

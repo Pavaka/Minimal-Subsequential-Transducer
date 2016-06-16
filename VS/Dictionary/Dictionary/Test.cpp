@@ -12,12 +12,28 @@ void Test()
 	for (int i = 1; i <= Word.size(); ++i)
 	{
 		Trans.T.push_back(std::make_shared<State>());
+
 		Trans.T[i - 1]->AddDeltaTransition(Word[i - 1], Trans.T[i]);
 		Trans.T[i - 1]->AddLambdaTransition(Word[i - 1], std::string("dms"));
 	}
-	Trans.PrintTransducer();
 
 
+	Trans.QminusT.insert({ *Trans.T[2], Trans.T[2] });
+	std::shared_ptr<State> Nev = Trans.T[2]->CopyOfState();
+	Nev->PrintState();
+	std::shared_ptr<State> eq = Trans.EquivalentStateInQminusT(Nev);
+	eq->PrintState();
+	std::cout << (*eq == *Nev);
+	//Trans.MinimalExceptWord = Word;
+	//std::cout << Trans.MinimalExceptWord;
+
+	//Trans.ReduceToMinimalExceptPrefixInDictionary(std::string("p"));
+	//Trans.PrintTransducer();
+	//std::cout << Trans.MinimalExceptWord;
+	////trans
+	//Trans.IncreaseToMinimalExceptPrefixInDictionary(std::string("pav"));
+	//std::cout << "Da";
+	//Trans.PrintTransducer();
 
 
 

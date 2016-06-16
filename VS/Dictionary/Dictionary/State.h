@@ -24,6 +24,10 @@ public:
 	std::vector<std::pair<char, std::string>> GetLambdaAsSortedVectorOfPairs() const;
 	void SetDeltaTransition(char Letter, std::shared_ptr<State>& ToState);
 	void PrintState();
+	//Returns a new state that is a copy of this
+	std::shared_ptr<State> CopyOfState();
+	void SetIsFinal(bool);
+	void SetPsi(std::string);
 };
 
 namespace std

@@ -52,3 +52,4 @@ bool IsPrefix(const std::string& Prefix, const std::string& Word)
 	}
 	return false;
 }
+

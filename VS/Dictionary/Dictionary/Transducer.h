@@ -17,8 +17,8 @@ public:
 	void MakeMinimalExceptPrefixInDictionary(std::string& Word);
 	std::shared_ptr<State> EquivalentStateInQminusT(std::shared_ptr<State>&);
 	void AddStateInQminusT(std::shared_ptr<State>&);
-	void PrintTransducer();
 public:
+	void PrintTransducer();
 	Transducer();
 	//Construct transducer from words
 	Transducer(VecPairStrStr_t&);
