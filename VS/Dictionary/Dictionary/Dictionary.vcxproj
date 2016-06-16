@@ -145,10 +145,16 @@
     <ClCompile Include="HelperFunctions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="Transducer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HelperFunctions.h" />
+    <ClInclude Include="MyTypes.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="Transducer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="small" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

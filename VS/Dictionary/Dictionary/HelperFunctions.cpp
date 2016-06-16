@@ -1,5 +1,5 @@
+#include <fstream>
 #include "HelperFunctions.h"
-
 
 int StringToIntHashing(std::string Word)
 {
@@ -9,4 +9,15 @@ int StringToIntHashing(std::string Word)
 		Result += Word[i] * Word[i];
 	}
 	return Result;
+}
+
+void ReadInputFile(std::ifstream& ConstructionData, VecPairStrStr_t& ConstructionPairs)
+{
+	std::string CurrentWord, CurrentWordImage;
+	while (!ConstructionData.eof())
+	{
+		ConstructionData >> CurrentWord;
+		ConstructionData >> CurrentWordImage;
+		ConstructionPairs.push_back(std::make_pair(CurrentWord, CurrentWordImage));
+	}
 }
