@@ -23,5 +23,6 @@ public:
 	//Construct transducer from words
 	Transducer(VecPairStrStr_t&);
 	void AddPairOfWords(std::string& Word, std::string& WordImage);
+	std::string TraverseAndConcatenateOutputs(std::string);
 
 };

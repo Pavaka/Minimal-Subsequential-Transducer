@@ -29,6 +29,7 @@ public:
 	void SetIsFinal(bool);
 	void SetPsi(std::string);
 	std::shared_ptr<State>& GetStateWithTransitionLetter(char Letter);
+	std::string GetOutputWithTransitonLetter(char);
 };
 
 namespace std

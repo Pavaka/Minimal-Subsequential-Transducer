@@ -128,12 +128,12 @@ std::vector<std::pair<char, std::string>> State::GetLambdaAsSortedVectorOfPairs(
 
 void State::SetDeltaTransition(char Letter, std::shared_ptr<State>& ToState)
 {
-
-	auto It = this->Delta.find(Letter);
-	if (It != this->Delta.end())
-	{
-		It->second = ToState;
-	}
+	this->Delta[Letter] = ToState;
+	//auto It = this->Delta.find(Letter);
+	//if (It != this->Delta.end())
+	//{
+	//	It->second = ToState;
+	//}
 }
 
 void State::PrintState()
@@ -182,7 +182,11 @@ void State::SetPsi(std::string Psi)
 
 std::shared_ptr<State>& State::GetStateWithTransitionLetter(char Letter)
 {
+	return this->Delta[Letter];
+}
 
-	return this->Delta.find(Letter)->second;
+std::string State::GetOutputWithTransitonLetter(char Letter)
+{
+	return this->Lambda[Letter];
 }
 

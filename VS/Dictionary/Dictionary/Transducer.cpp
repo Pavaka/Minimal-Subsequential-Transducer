@@ -121,6 +121,40 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 {
 	std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(this->MinimalExceptWord, Word);
 	this->MakeMinimalExceptPrefixInDictionary(CommonPrefixOfMinExceptAndWord);
+	int k = CommonPrefixOfMinExceptAndWord.size();
+	int m = Word.size();
+	std::cout << "Crash Report" << __LINE__ << std::endl;
+	//Add new states in T and their proper Delta transitions
+	for (int i = k + 1; i <= m; ++i)
+	{
+		this->T.push_back(std::make_shared<State>());
+		T[i - 1]->AddDeltaTransition(Word[i - 1], T[i]);
+		//@DELETE
+		T[i - 1]->AddLambdaTransition(Word[i - 1], std::string("dmsmix"));
+		//std::cout << "Crash Report" << __LINE__ << std::endl;
+	}
+	//Make last state in T final
+	this->T[this->T.size() - 1]->SetIsFinal(true);
 
-	
+	//Update Psi Values
+
+
+
+
+
+	//Right ?
+	this->MinimalExceptWord = Word;
+}
+
+std::string Transducer::TraverseAndConcatenateOutputs(std::string Word)
+{
+	std::shared_ptr<State> CurrentState = this->InitialState;
+	std::string Result("");
+	for (int i = 0; i < Word.size(); ++i)
+	{
+		Result += CurrentState->GetOutputWithTransitonLetter(Word[i]);
+		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
+	}
+
+	return Result;
 }
