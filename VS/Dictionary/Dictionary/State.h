@@ -28,6 +28,7 @@ public:
 	std::shared_ptr<State> CopyOfState();
 	void SetIsFinal(bool);
 	void SetPsi(std::string);
+	std::shared_ptr<State>& GetStateWithTransitionLetter(char Letter);
 };
 
 namespace std

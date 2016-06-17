@@ -18,23 +18,22 @@ void Test()
 	}
 
 
-	Trans.QminusT.insert({ *Trans.T[2], Trans.T[2] });
-	std::shared_ptr<State> Nev = Trans.T[2]->CopyOfState();
-	Nev->PrintState();
-	std::shared_ptr<State> eq = Trans.EquivalentStateInQminusT(Nev);
-	eq->PrintState();
-	std::cout << (*eq == *Nev);
-	//Trans.MinimalExceptWord = Word;
-	//std::cout << Trans.MinimalExceptWord;
 
+	Trans.MinimalExceptWord = Word;
+	Trans.MakeMinimalExceptPrefixInDictionary(std::string("pa"));
+	Trans.PrintTransducer();
 	//Trans.ReduceToMinimalExceptPrefixInDictionary(std::string("p"));
-	//Trans.PrintTransducer();
-	//std::cout << Trans.MinimalExceptWord;
-	////trans
 	//Trans.IncreaseToMinimalExceptPrefixInDictionary(std::string("pav"));
-	//std::cout << "Da";
+	////std::cout << "Da";
+	//Trans.PrintTransducer();
+	//Trans.ReduceToMinimalExceptPrefixInDictionary(std::string(""));
 	//Trans.PrintTransducer();
 
+	//Trans.QminusT.insert({ *Trans.T[2], Trans.T[2] });
+	//std::shared_ptr<State> Nev = Trans.T[2]->CopyOfState();
+	//Nev->PrintState();
+	//std::shared_ptr<State> eq = Trans.EquivalentStateInQminusT(Nev);
+	//eq->PrintState();
 
 
 	std::shared_ptr<State> State1 = std::make_shared<State>();

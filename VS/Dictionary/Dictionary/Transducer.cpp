@@ -30,6 +30,7 @@ void Transducer::ReduceToMinimalExceptPrefixInDictionary(std::string & Word)
 	this->MinimalExceptWord = Word;
 
 }
+
 void Transducer::IncreaseToMinimalExceptPrefixInDictionary(std::string & Word)
 {
 	if (this->MinimalExceptWord == Word)
@@ -42,13 +43,16 @@ void Transducer::IncreaseToMinimalExceptPrefixInDictionary(std::string & Word)
 	
 	for (int i = k; i < m; ++i)
 	{
-		std::cout << i << this->T.size();
-		T.push_back(std::shared_ptr<State>());
+		//Ti WordI  copy of current Ti with word state
+		std::shared_ptr<State>& NewState = T[i]->GetStateWithTransitionLetter(Word[i])->CopyOfState();
+		T[i]->SetDeltaTransition(Word[i], NewState);
 		//std::cout << "Crash report " << __LINE__ << std::endl;
-		T[i]->SetDeltaTransition(Word[i], T[i+1]);
+
+		this->T.push_back(NewState);
 	}
 	this->MinimalExceptWord = Word;
 }
+
 void Transducer::MakeMinimalExceptPrefixInDictionary(std::string& Word)
 {
 	if (Word == this->MinimalExceptWord)
@@ -60,6 +64,7 @@ void Transducer::MakeMinimalExceptPrefixInDictionary(std::string& Word)
 	this->IncreaseToMinimalExceptPrefixInDictionary(Word);
 
 }
+
 std::shared_ptr<State> Transducer::EquivalentStateInQminusT(std::shared_ptr<State>& CurrentState)
 {
 	auto Iterator = this->QminusT.find(*CurrentState);
@@ -72,24 +77,31 @@ std::shared_ptr<State> Transducer::EquivalentStateInQminusT(std::shared_ptr<Stat
 		return Iterator->second;
 	}
 }
+
 void Transducer::AddStateInQminusT(std::shared_ptr<State>& CurrentState)
 {
 	this->QminusT.insert({ *CurrentState, CurrentState });
 }
+
 void Transducer::PrintTransducer()
 {
-	std::cout << "Print Transducer\n";
-	for (auto It : QminusT)
-	{
-		std::cout << " ---- QminusT ----\n";
-		It.second->PrintState();
-	}
+	std::cout << "***********Print Transducer\n";
 	for (int i = 0; i < this->T.size(); ++i)
 	{
 		std::cout << " ----   T  ----\n";
 		this->T[i]->PrintState();
+		std::cout << std::endl;
+
+	}
+	for (auto It : QminusT)
+	{
+		std::cout << " ---- QminusT ----\n";
+		It.second->PrintState();
+		std::cout << std::endl;
+
 	}
 }
+
 Transducer::Transducer()
 {
 	this->InitialState = std::make_shared<State>();

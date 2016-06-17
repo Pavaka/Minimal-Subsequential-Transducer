@@ -128,14 +128,18 @@ std::vector<std::pair<char, std::string>> State::GetLambdaAsSortedVectorOfPairs(
 
 void State::SetDeltaTransition(char Letter, std::shared_ptr<State>& ToState)
 {
-	this->Delta.erase(this->Delta.find(Letter));
-	this->Delta.insert({ Letter, ToState });
+
+	auto It = this->Delta.find(Letter);
+	if (It != this->Delta.end())
+	{
+		It->second = ToState;
+	}
 }
 
 void State::PrintState()
 {
-	std::cout << "State Id = " << this->Id << (this->IsFinal ? " Final" : " Not Final") << std::endl;
-	std::cout << "Psi = " << this->Psi << std::endl;
+	std::cout << "State Id = " << this->Id << (this->IsFinal ? " Final" : " Not Final ");
+	std::cout << " Psi = " << this->Psi << std::endl;
 	std::vector<std::pair<char, int>> Deltas = this->GetDeltaAsSortedVectorOfPairs();
 	std::vector<std::pair<char, std::string>> Lambdas = this->GetLambdaAsSortedVectorOfPairs();
 	if (Lambdas.size() == 0)
@@ -174,5 +178,11 @@ void State::SetIsFinal(bool Finality)
 void State::SetPsi(std::string Psi)
 {
 	this->Psi = Psi;
+}
+
+std::shared_ptr<State>& State::GetStateWithTransitionLetter(char Letter)
+{
+
+	return this->Delta.find(Letter)->second;
 }
 
