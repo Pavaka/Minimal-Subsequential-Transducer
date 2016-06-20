@@ -4,11 +4,11 @@ all_words = []
 def randomword(length):
    return ''.join(chr(randint(97, 122)) for i in range(length))
 print(randomword(3))
-f = open('8k','w')
+f = open('300k','w')
 
 words1 = []
 words2 = []
-for i in range(8000):
+for i in range(300000):
 	words1.append(randomword(randint(4, 20)))
 	words2.append(randomword(randint(4, 20)))
 

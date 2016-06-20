@@ -11,7 +11,7 @@ void Test()
 	std::ifstream  ConstructionDataStream;
 	VecPairStrStr_t ConstructionPairs;
 	//ConstructionDataStream.open("narrow.txt");
-	ConstructionDataStream.open("4k");
+	ConstructionDataStream.open("300k");
 	ReadInputFile(ConstructionDataStream, ConstructionPairs);
 	Transducer Trans(ConstructionPairs);
 
