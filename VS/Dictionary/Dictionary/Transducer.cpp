@@ -127,28 +127,10 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 	{
 		this->T.push_back(std::make_shared<State>());
 		T[i - 1]->AddDeltaTransition(Word[i - 1], T[i]);
-		//@DELETE
-		//T[i - 1]->AddLambdaTransition(Word[i - 1], std::string("ZZZ"));
-		//std::cout << "Crash Report" << __LINE__ << std::endl;
 	}
+
 	//Make last state in T final
 	this->T[this->T.size() - 1]->SetIsFinal(true);
-
-	//Update Psi Values
-	for (int i = 1; i <= k; ++i)
-	{
-		if (this->T[i]->GetIsFinal())
-		{
-
-			std::string FirstILettersOfWord = Word.substr(0, i);
-			this->TraverseAndConcatenateOutputs(FirstILettersOfWord);
-
-			std::string OutputWithFirstILetters = this->TraverseAndConcatenateOutputs(FirstILettersOfWord);
-			std::string ComPref = CommonPrefix(OutputWithFirstILetters, WordImage);
-			std::string Result =   CommonPrefix(ComPref, OutputWithFirstILetters) + T[i]->GetPsi();
-			T[i]->SetPsi(Result);
-		}
-	}
 
 	//Calculate updates in lambda after that apply them, thus we calculate them with old transducer
 	VecOfVecOfPairCharStr_t UpdatesOfTransitions;
@@ -158,10 +140,13 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 	//possible optimizations
 	for (int i = 1; i <= k; ++i)
 	{
-		std::string Substractor = CommonPrefix(this->TraverseAndConcatenateOutputs(Word.substr(0, i - 1)), WordImage);
-		std::string RightOutput = CommonPrefix(this->TraverseAndConcatenateOutputs(Word.substr(0, i)), WordImage);
-		std::string NewOutput = SubtractStringFromLeft(Substractor, RightOutput);
-		UpdatesOfTransitions[i - 1].push_back(std::make_pair(Word[i - 1], NewOutput));
+		//std::string Substractor = CommonPrefix(this->LambdaTraverse(Word.substr(0, i - 1)), WordImage);
+		//std::string RightOutput = CommonPrefix(this->LambdaTraverse(Word.substr(0, i)), WordImage);
+		//std::string NewOutput = SubtractStringFromLeft(Substractor, RightOutput);
+		UpdatesOfTransitions[i - 1].push_back(std::make_pair(Word[i - 1], 
+			//NewOuput
+			SubtractStringFromLeft(CommonPrefix(this->LambdaTraverse(Word.substr(0, i - 1)), WordImage), CommonPrefix(this->LambdaTraverse(Word.substr(0, i)), WordImage))
+			));
 		
 	}
 
@@ -172,8 +157,8 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 		for (int j = 0; j < AllLettersMinusOne.size(); ++j)
 		{
 			char Sigma = AllLettersMinusOne[j];
-			std::string Subtractor = CommonPrefix(this->TraverseAndConcatenateOutputs(Word.substr(0, i)), WordImage);
-			std::string RightPart = this->TraverseAndConcatenateOutputs(Word.substr(0, i) + Sigma);
+			std::string Subtractor = CommonPrefix(this->LambdaTraverse(Word.substr(0, i)), WordImage);
+			std::string RightPart = this->LambdaTraverse(Word.substr(0, i) + Sigma);
 			std::string Result = SubtractStringFromLeft(Subtractor, RightPart);
 			UpdatesOfTransitions[i].push_back(std::make_pair(Sigma, Result));
 		}
@@ -181,14 +166,10 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 	//part three
 	if(k < Word.size())
 	{
-		std::string OutputWithFirstKLetters = this->TraverseAndConcatenateOutputs(Word.substr(0, k));
-
+		std::string OutputWithFirstKLetters = this->LambdaTraverse(Word.substr(0, k));
 		std::string Substractor = CommonPrefix(OutputWithFirstKLetters, WordImage);
 		std::string Result = SubtractStringFromLeft(Substractor, WordImage);
-		//std::cout << "CARSAH " << __LINE__ << Word[k] << " " << Result << std::endl;
-
 		UpdatesOfTransitions[k].push_back(std::make_pair(Word[k], Result));
-		//this->T[k]->AddLambdaTransition(Word[k], Result);
 	}
 	//part four
 	for (int i = k + 1; i < m; ++i)
@@ -196,8 +177,19 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 		this->T[i]->AddLambdaTransition(Word[i], std::string(""));
 	}
 
+	//Update Psi Values
+	for (int i = 1; i <= k; ++i)
+	{
+		if (this->T[i]->GetIsFinal())
+		{
+			std::string FirstILettersOfWord = Word.substr(0, i);
+			std::string OutputWithFirstILetters = this->LambdaTraverse(FirstILettersOfWord);
+			std::string Subtractor = CommonPrefix(OutputWithFirstILetters, WordImage);
+			std::string Result = SubtractStringFromLeft(Subtractor, OutputWithFirstILetters) + T[i]->GetPsi();
+			T[i]->SetPsi(Result);
+		}
+	}
 
-	//std::cout << "Crash Report" << __LINE__ << std::endl;
 	//Apply updates
 	for (int i = 0; i < UpdatesOfTransitions.size(); ++i)
 	{
@@ -220,5 +212,33 @@ std::string Transducer::TraverseAndConcatenateOutputs(std::string Word)
 		Result += CurrentState->GetOutputWithTransitonLetter(Word[i]);
 		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
 	}
+	Result += CurrentState->GetPsi();
 	return Result;
 }
+//BAD SOFTWARE ENGINERING DUPICATE CODE
+std::string Transducer::LambdaTraverse(std::string Word)
+{
+	std::shared_ptr<State> CurrentState = this->InitialState;
+	std::string Result("");
+	for (int i = 0; i < Word.size(); ++i)
+	{
+		Result += CurrentState->GetOutputWithTransitonLetter(Word[i]);
+		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
+	}
+	return Result;
+}
+
+std::string Transducer::LambdaPsiTraverse(std::string Word)
+{
+	std::shared_ptr<State> CurrentState = this->InitialState;
+	std::string Result("");
+	for (int i = 0; i < Word.size(); ++i)
+	{
+		Result += CurrentState->GetOutputWithTransitonLetter(Word[i]);
+		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
+	}
+	Result += CurrentState->GetPsi();
+	return Result;
+}
+
+
