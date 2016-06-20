@@ -30,6 +30,8 @@ public:
 	void SetPsi(std::string);
 	std::shared_ptr<State>& GetStateWithTransitionLetter(char Letter);
 	std::string GetOutputWithTransitonLetter(char);
+	void SetLambdaTransition(char Letter, std::string Output);
+	std::string AllTransitionalLettersExceptOne(char ExceptionLetter);
 };
 
 namespace std

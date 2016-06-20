@@ -4,7 +4,7 @@
 #include "State.h"
 class Transducer
 {
-	//Make it private after testing
+//@Make it private after testing
 public:
 	std::unordered_map<State, std::shared_ptr<State>> QminusT;
 	std::vector<std::shared_ptr<State>> T;

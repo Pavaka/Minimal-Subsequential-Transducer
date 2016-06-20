@@ -138,6 +138,7 @@ void State::SetDeltaTransition(char Letter, std::shared_ptr<State>& ToState)
 
 void State::PrintState()
 {
+	std::string LambdaOutput;
 	std::cout << "State Id = " << this->Id << (this->IsFinal ? " Final" : " Not Final ");
 	std::cout << " Psi = " << this->Psi << std::endl;
 	std::vector<std::pair<char, int>> Deltas = this->GetDeltaAsSortedVectorOfPairs();
@@ -149,7 +150,15 @@ void State::PrintState()
 	for (int i = 0; i < Lambdas.size(); ++i)
 	{
 		//this Id Transition Letter To State Output
-		printf("< %d, %c, <%d, %s >>\n", this->Id, Deltas[i].first, Deltas[i].second, Lambdas[i].second.c_str());
+		if (Lambdas[i].second == std::string(""))
+		{
+			LambdaOutput = std::string("EPSILON");
+		}
+		else
+		{
+			LambdaOutput = Lambdas[i].second;
+		}
+		printf("< %d, <%c, %s>, %d >\n", this->Id, Deltas[i].first, LambdaOutput.c_str(), Deltas[i].second);
 	}
 }
 
@@ -188,5 +197,23 @@ std::shared_ptr<State>& State::GetStateWithTransitionLetter(char Letter)
 std::string State::GetOutputWithTransitonLetter(char Letter)
 {
 	return this->Lambda[Letter];
+}
+
+void State::SetLambdaTransition(char Letter, std::string Output)
+{
+	this->Lambda[Letter] = Output;
+}
+
+std::string State::AllTransitionalLettersExceptOne(char ExceptionLetter)
+{
+	std::string Result("");
+	for (auto it : this->Lambda)
+	{
+		if (it.first != ExceptionLetter)
+		{
+			Result += it.first;
+		}
+	}
+	return Result;
 }
 

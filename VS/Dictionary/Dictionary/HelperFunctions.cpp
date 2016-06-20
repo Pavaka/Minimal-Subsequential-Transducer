@@ -1,5 +1,6 @@
 #include <fstream>
 #include <algorithm>
+#include <cassert>
 #include "HelperFunctions.h"
 
 int StringToIntHashing(std::string Word)
@@ -51,5 +52,12 @@ bool IsPrefix(const std::string& Prefix, const std::string& Word)
 		return true;
 	}
 	return false;
+}
+
+
+std::string SubtractStringFromLeft(std::string Subtractor, std::string Word)
+{
+	assert(IsPrefix(Subtractor, Word));
+	return Word.substr(Subtractor.size());
 }
 

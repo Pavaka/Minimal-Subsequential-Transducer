@@ -39,7 +39,6 @@ void Transducer::IncreaseToMinimalExceptPrefixInDictionary(std::string & Word)
 	}
 	int k = this->MinimalExceptWord.size();
 	int m = Word.size();
-	std::cout << k << m << this->T.size();
 	
 	for (int i = k; i < m; ++i)
 	{
@@ -123,24 +122,90 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 	this->MakeMinimalExceptPrefixInDictionary(CommonPrefixOfMinExceptAndWord);
 	int k = CommonPrefixOfMinExceptAndWord.size();
 	int m = Word.size();
-	std::cout << "Crash Report" << __LINE__ << std::endl;
 	//Add new states in T and their proper Delta transitions
 	for (int i = k + 1; i <= m; ++i)
 	{
 		this->T.push_back(std::make_shared<State>());
 		T[i - 1]->AddDeltaTransition(Word[i - 1], T[i]);
 		//@DELETE
-		T[i - 1]->AddLambdaTransition(Word[i - 1], std::string("dmsmix"));
+		//T[i - 1]->AddLambdaTransition(Word[i - 1], std::string("ZZZ"));
 		//std::cout << "Crash Report" << __LINE__ << std::endl;
 	}
 	//Make last state in T final
 	this->T[this->T.size() - 1]->SetIsFinal(true);
 
 	//Update Psi Values
+	for (int i = 1; i <= k; ++i)
+	{
+		if (this->T[i]->GetIsFinal())
+		{
+
+			std::string FirstILettersOfWord = Word.substr(0, i);
+			this->TraverseAndConcatenateOutputs(FirstILettersOfWord);
+
+			std::string OutputWithFirstILetters = this->TraverseAndConcatenateOutputs(FirstILettersOfWord);
+			std::string ComPref = CommonPrefix(OutputWithFirstILetters, WordImage);
+			std::string Result =   CommonPrefix(ComPref, OutputWithFirstILetters) + T[i]->GetPsi();
+			T[i]->SetPsi(Result);
+		}
+	}
+
+	//Calculate updates in lambda after that apply them, thus we calculate them with old transducer
+	VecOfVecOfPairCharStr_t UpdatesOfTransitions;
+	UpdatesOfTransitions.resize(this->T.size());
+
+	//udpates part one
+	//possible optimizations
+	for (int i = 1; i <= k; ++i)
+	{
+		std::string Substractor = CommonPrefix(this->TraverseAndConcatenateOutputs(Word.substr(0, i - 1)), WordImage);
+		std::string RightOutput = CommonPrefix(this->TraverseAndConcatenateOutputs(Word.substr(0, i)), WordImage);
+		std::string NewOutput = SubtractStringFromLeft(Substractor, RightOutput);
+		UpdatesOfTransitions[i - 1].push_back(std::make_pair(Word[i - 1], NewOutput));
+		
+	}
+
+	//part two
+	for (int i = 1; i <= k; ++i)
+	{
+		std::string AllLettersMinusOne = this->T[i]->AllTransitionalLettersExceptOne(Word[i]);
+		for (int j = 0; j < AllLettersMinusOne.size(); ++j)
+		{
+			char Sigma = AllLettersMinusOne[j];
+			std::string Subtractor = CommonPrefix(this->TraverseAndConcatenateOutputs(Word.substr(0, i)), WordImage);
+			std::string RightPart = this->TraverseAndConcatenateOutputs(Word.substr(0, i) + Sigma);
+			std::string Result = SubtractStringFromLeft(Subtractor, RightPart);
+			UpdatesOfTransitions[i].push_back(std::make_pair(Sigma, Result));
+		}
+	}
+	//part three
+	if(k < Word.size())
+	{
+		std::string OutputWithFirstKLetters = this->TraverseAndConcatenateOutputs(Word.substr(0, k));
+
+		std::string Substractor = CommonPrefix(OutputWithFirstKLetters, WordImage);
+		std::string Result = SubtractStringFromLeft(Substractor, WordImage);
+		//std::cout << "CARSAH " << __LINE__ << Word[k] << " " << Result << std::endl;
+
+		UpdatesOfTransitions[k].push_back(std::make_pair(Word[k], Result));
+		//this->T[k]->AddLambdaTransition(Word[k], Result);
+	}
+	//part four
+	for (int i = k + 1; i < m; ++i)
+	{
+		this->T[i]->AddLambdaTransition(Word[i], std::string(""));
+	}
 
 
-
-
+	//std::cout << "Crash Report" << __LINE__ << std::endl;
+	//Apply updates
+	for (int i = 0; i < UpdatesOfTransitions.size(); ++i)
+	{
+		for (std::pair<char, std::string> Pair : UpdatesOfTransitions[i])
+		{
+			this->T[i]->SetLambdaTransition(Pair.first, Pair.second);
+		}
+	}
 
 	//Right ?
 	this->MinimalExceptWord = Word;
@@ -155,6 +220,5 @@ std::string Transducer::TraverseAndConcatenateOutputs(std::string Word)
 		Result += CurrentState->GetOutputWithTransitonLetter(Word[i]);
 		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
 	}
-
 	return Result;
 }

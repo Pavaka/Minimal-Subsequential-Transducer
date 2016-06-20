@@ -10,3 +10,8 @@ void ReadInputFile(std::ifstream& ConstructionData, VecPairStrStr_t& Constructio
 std::string CommonPrefix(const std::string&, const std::string&);
 
 bool IsPrefix(const std::string& Prefix, const std::string& Word);
+
+
+//Return Subtractor^-1 * Word
+//Works on the assumption that Substractor is a prefix of Word
+std::string SubtractStringFromLeft(std::string Subtractor, std::string Word);
