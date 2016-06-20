@@ -217,3 +217,12 @@ std::string State::AllTransitionalLettersExceptOne(char ExceptionLetter)
 	return Result;
 }
 
+bool State::HasTransitionWithLetter(char Letter)
+{
+	if (this->Delta.find(Letter) != this->Delta.end())
+	{
+		return true;
+	}
+	return false;
+}
+

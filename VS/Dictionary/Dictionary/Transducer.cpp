@@ -118,17 +118,18 @@ Transducer::Transducer(VecPairStrStr_t& ConstructionVector): Transducer()
 
 void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 {
+	std::string LongestPrefixOfWord = this->LongestPrefixOfWordInDictionary(Word);
 	std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(this->MinimalExceptWord, Word);
 	this->MakeMinimalExceptPrefixInDictionary(CommonPrefixOfMinExceptAndWord);
 	int k = CommonPrefixOfMinExceptAndWord.size();
 	int m = Word.size();
+
 	//Add new states in T and their proper Delta transitions
 	for (int i = k + 1; i <= m; ++i)
 	{
 		this->T.push_back(std::make_shared<State>());
 		T[i - 1]->AddDeltaTransition(Word[i - 1], T[i]);
 	}
-
 	//Make last state in T final
 	this->T[this->T.size() - 1]->SetIsFinal(true);
 
@@ -178,6 +179,7 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 			SubtractStringFromLeft(Substractor, WordImage)
 			));
 	}
+
 	//part four
 	for (int i = k + 1; i < m; ++i)
 	{
@@ -225,6 +227,10 @@ std::string Transducer::TraverseAndConcatenateOutputs(std::string Word)
 		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
 	}
 	Result += CurrentState->GetPsi();
+	if (!CurrentState->GetIsFinal())
+	{
+		return  Word + " Not Found in the dictionary";
+	}
 	return Result;
 }
 //BAD SOFTWARE ENGINERING DUPICATE CODE
@@ -251,6 +257,20 @@ std::string Transducer::LambdaPsiTraverse(std::string Word)
 	}
 	Result += CurrentState->GetPsi();
 	return Result;
+}
+
+std::string Transducer::LongestPrefixOfWordInDictionary(std::string Word)
+{
+	std::shared_ptr<State>& CurrentState = this->InitialState;
+	for (int i = 0; i < Word.size(); ++i)
+	{
+		if (!CurrentState->HasTransitionWithLetter(Word[i]))
+		{
+			return Word.substr(0, i);
+		}
+		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
+	}
+	return Word;
 }
 
 

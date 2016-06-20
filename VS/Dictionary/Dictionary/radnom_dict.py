@@ -4,13 +4,13 @@ all_words = []
 def randomword(length):
    return ''.join(chr(randint(97, 122)) for i in range(length))
 print(randomword(3))
-f = open('300k','w')
+f = open('3m','w')
 
 words1 = []
 words2 = []
-for i in range(300000):
-	words1.append(randomword(randint(4, 20)))
-	words2.append(randomword(randint(4, 20)))
+for i in range(3000000):
+	words1.append(randomword(randint(1, 20)))
+	words2.append(randomword(randint(1, 20)))
 
 words1 = list(set(words1))
 words1.sort()

@@ -32,6 +32,7 @@ public:
 	std::string GetOutputWithTransitonLetter(char);
 	void SetLambdaTransition(char Letter, std::string Output);
 	std::string AllTransitionalLettersExceptOne(char ExceptionLetter);
+	bool HasTransitionWithLetter(char Letter);
 };
 
 namespace std
@@ -51,7 +52,7 @@ namespace std
 			}
 			for (int i = 0; i < SortedLambdaPairs.size(); ++i)
 			{
-				HashCode += SortedLambdaPairs[i].first + StringToIntHashing(SortedLambdaPairs[i].second);
+				HashCode += SortedLambdaPairs[i].first * SortedLambdaPairs[i].first + StringToIntHashing(SortedLambdaPairs[i].second);
 			}
 
 			return HashCode;

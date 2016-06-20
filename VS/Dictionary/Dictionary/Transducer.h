@@ -26,5 +26,6 @@ public:
 	std::string TraverseAndConcatenateOutputs(std::string);
 	std::string LambdaTraverse(std::string);
 	std::string LambdaPsiTraverse(std::string);
+	std::string LongestPrefixOfWordInDictionary(std::string Word);
 
 };
