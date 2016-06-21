@@ -209,6 +209,8 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 
 	std::string FirstILettersOfWord;
 	std::string OutputWithFirstILetters;
+	//std::cout << k << m << " HERE\n";
+
 	//Update Psi Values
 	for (int i = 1; i <= k; ++i)
 	{
@@ -216,14 +218,15 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 		{
 			FirstILettersOfWord = Word.substr(0, i);
 			OutputWithFirstILetters = this->LambdaTraverse(FirstILettersOfWord);
-			//std::string Subtractor = CommonPrefix(OutputWithFirstILetters, WordImage);
-			//std::string Result = SubtractStringFromLeft(Subtractor, OutputWithFirstILetters) + T[i]->GetPsi();
+			std::string Subtractor = CommonPrefix(OutputWithFirstILetters, WordImage);
+			std::string Result = SubtractStringFromLeft(Subtractor, OutputWithFirstILetters) + T[i]->GetPsi();
 			T[i]->SetPsi(
-				//Result
-				SubtractStringFromLeft(CommonPrefix(OutputWithFirstILetters, WordImage), this->LambdaTraverse(FirstILettersOfWord)) + T[i]->GetPsi()
+				Result
+				//SubtractStringFromLeft(CommonPrefix(OutputWithFirstILetters, WordImage), this->LambdaTraverse(FirstILettersOfWord)) + T[i]->GetPsi()
 				);
 		}
 	}
+
 
 	//Apply updates
 	for (int i = 0; i < UpdatesOfTransitions.size(); ++i)
@@ -236,6 +239,7 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 
 	//Right ?
 	this->MinimalExceptWord = Word;
+	//this->PrintTransducer();
 	//std::cout << "Exit add \n";
 }
 
