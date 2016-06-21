@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 #include "State.h"
 State::State():Id(IdCounter++)
 {
@@ -107,8 +108,12 @@ std::vector<std::pair<char, int>> State::GetDeltaAsSortedVectorOfPairs() const
 {
 	std::vector<std::pair<char, int>> SortedDeltaPairs;
 	SortedDeltaPairs.reserve(this->Delta.size());
+	//std::cout << __LINE__ << std::endl;
+
 	for (auto It : this->Delta)
 	{
+		//std::cout << __LINE__ << std::endl;
+		//std::cout << It.first << It.second;
 		SortedDeltaPairs.push_back(std::make_pair(It.first, It.second->Id));
 	}
 	return std::move(SortedDeltaPairs);
@@ -141,8 +146,10 @@ void State::PrintState()
 	std::string LambdaOutput;
 	std::cout << "State Id = " << this->Id << (this->IsFinal ? " Final" : " Not Final ");
 	std::cout << " Psi = " << this->Psi << std::endl;
+	//std::cout << __LINE__ << std::endl;
 	std::vector<std::pair<char, int>> Deltas = this->GetDeltaAsSortedVectorOfPairs();
 	std::vector<std::pair<char, std::string>> Lambdas = this->GetLambdaAsSortedVectorOfPairs();
+
 	if (Lambdas.size() == 0)
 	{
 		std::cout << "No Transitions\n";
@@ -196,6 +203,7 @@ std::shared_ptr<State>& State::GetStateWithTransitionLetter(char Letter)
 
 std::string State::GetOutputWithTransitonLetter(char Letter)
 {
+	assert((this->Lambda.find(Letter) != this->Lambda.end()));
 	return this->Lambda[Letter];
 }
 
