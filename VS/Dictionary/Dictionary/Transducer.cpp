@@ -39,14 +39,21 @@ void Transducer::IncreaseToMinimalExceptPrefixInDictionary(std::string & Word)
 	}
 	int k = this->MinimalExceptWord.size();
 	int m = Word.size();
-	
+	std::shared_ptr<State> NewState;
 	for (int i = k; i < m; ++i)
 	{
+
+		//Incorrect 
+		//NewState = this->T[i]->GetStateWithTransitionLetter(Word[i]);
+		//T[i]->SetDeltaTransition(Word[i], NewState);
+		//this->T.push_back(NewState);
+		//this->QminusT.erase(this->QminusT.find(*NewState));
+
+
+		//OLD BUT WORKING
 		//Ti WordI  copy of current Ti with word state
 		std::shared_ptr<State>& NewState = T[i]->GetStateWithTransitionLetter(Word[i])->CopyOfState();
 		T[i]->SetDeltaTransition(Word[i], NewState);
-		//std::cout << "Crash report " << __LINE__ << std::endl;
-
 		this->T.push_back(NewState);
 	}
 	this->MinimalExceptWord = Word;
@@ -120,11 +127,11 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 {
 
 	//std::cout << __LINE__ << std::endl;
-	std::string LongestPrefixOfWord = this->LongestPrefixOfWordInDictionary(Word);
-	std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(LongestPrefixOfWord, Word);
+	//std::string LongestPrefixOfWord = this->LongestPrefixOfWordInDictionary(Word);
+	//std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(LongestPrefixOfWord, Word);
 	//this->PrintTransducer();
 	//std::cout << Word << " " << this->MinimalExceptWord << " " << LongestPrefixOfWord << std::endl;
-	//std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(this->MinimalExceptWord, Word);
+	std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(this->MinimalExceptWord, Word);
 
 	//std::cout << Word << " " << LongestPrefixOfWord << std::endl;
 

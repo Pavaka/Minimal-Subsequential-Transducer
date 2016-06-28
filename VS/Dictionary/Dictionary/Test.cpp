@@ -11,7 +11,7 @@ void Test()
 	//std::ifstream  ConstructionDataStream;
 	//VecPairStrStr_t ConstructionPairs;
 	////ConstructionDataStream.open("narrow.txt");
-	//ConstructionDataStream.open("100k");
+	//ConstructionDataStream.open("1m");
 	//ReadInputFile(ConstructionDataStream, ConstructionPairs);
 	//std::cout << "Words in dict = " << ConstructionPairs.size() << std::endl;
 	//Transducer Trans(ConstructionPairs);
@@ -60,15 +60,21 @@ void Test()
 
 	//Trans.PrintTransducer();
 	//Trans.AddPairOfWords(std::string("bbbc"), std::string("yzz"));
+	//HERE
 
 	Transducer Trans{};
-	Trans.AddPairOfWords(std::string("bf"), std::string("xxxx"));
 	Trans.AddPairOfWords(std::string("abc"), std::string("xyy"));
 	Trans.AddPairOfWords(std::string("bab"), std::string("yyx"));
-	Trans.AddPairOfWords(std::string("babc"), std::string("yyyy"));
-	//std::cout << "miniexcept = "<<Trans.MinimalExceptWord << std::endl;
+	//Trans.AddPairOfWords(std::string("babc"), std::string("yyyy"));
+	Trans.AddPairOfWords(std::string("bf"), std::string("x"));
+	////std::cout << "miniexcept = "<<Trans.MinimalExceptWord << std::endl;
+	//Trans.MakeMinimalExceptPrefixInDictionary(std::string("bab"));
+	Trans.MakeMinimalExceptPrefixInDictionary(std::string(""));
 	Trans.MakeMinimalExceptPrefixInDictionary(std::string("bab"));
+
 	Trans.PrintTransducer();
+
+
 	//Trans.AddPairOfWords(std::string("ab"), std::string("xx"));
 	//Trans.PrintTransducer();
 	//std::cout << Trans.LongestPrefixOfWordInDictionary(std::string("b"));
