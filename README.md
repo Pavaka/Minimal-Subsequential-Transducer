@@ -1,4 +1,9 @@
-# Dictionary
-Constructing and maintaining a dictionary of words, using the theory of finite state machines.
-- The use of variable names like Delta, Lambda, QminusT is due to the mathematical notations.
-TODO: Add proper explenation for each badnamed variable 
+# Direct Construction of Minimal Acyclic Subsequential Transducers
+Construct a dictionary (str -> str map) of words.
+The algorithm constructs subsequential transducers, 
+which is part of the more advanced theory of finate state machines.
+
+The algorithm is from **Stoyan Mihov** and Denis Maurel paper
+**Direct Construction of Minimal Acyclic Subsequential Transducers**: 
+https://link.springer.com/chapter/10.1007/3-540-44674-5_18
+

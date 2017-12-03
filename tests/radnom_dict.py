@@ -4,11 +4,11 @@ all_words = []
 def randomword(length):
    return ''.join(chr(randint(97, 122)) for i in range(length))
 print(randomword(3))
-f = open('1.1m','w')
+f = open('5.txt','w')
 
 words1 = []
 words2 = []
-for i in range(1100000):
+for i in range(4):
 	words1.append(randomword(randint(1, 20)))
 	words2.append(randomword(randint(1, 20)))
 

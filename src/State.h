@@ -6,13 +6,7 @@
 static int IdCounter = 0;
 class State
 {
-private:
-	std::unordered_map<char, std::shared_ptr<State>> Delta;
-	std::unordered_map<char, std::string> Lambda;
-	std::string Psi;
-	bool IsFinal;
 public:
-	const int Id;
 	State();
 	bool operator==(const State& Other) const;
 	void AddDeltaTransition(char Letter, std::shared_ptr<State>& ToState);
@@ -33,6 +27,12 @@ public:
 	void SetLambdaTransition(char Letter, std::string Output);
 	std::string AllTransitionalLettersExceptOne(char ExceptionLetter);
 	bool HasTransitionWithLetter(char Letter);
+private:
+	std::unordered_map<char, std::shared_ptr<State>> Delta;
+	std::unordered_map<char, std::string> Lambda;
+	std::string Psi;
+	bool IsFinal;
+	const int Id;
 };
 
 namespace std

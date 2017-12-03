@@ -108,15 +108,11 @@ void Transducer::PrintTransducer()
 	}
 }
 
-Transducer::Transducer()
+Transducer::Transducer(VecPairStrStr_t& ConstructionVector)
 {
 	this->InitialState = std::make_shared<State>();
 	this->MinimalExceptWord = std::string("");
 	this->T.push_back(this->InitialState);
-}
-
-Transducer::Transducer(VecPairStrStr_t& ConstructionVector): Transducer()
-{
 	for (int i = 0; i < ConstructionVector.size(); ++i)
 	{
 		this->AddPairOfWords(ConstructionVector[i].first, ConstructionVector[i].second);
@@ -125,21 +121,13 @@ Transducer::Transducer(VecPairStrStr_t& ConstructionVector): Transducer()
 
 void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 {
-
-	//std::cout << __LINE__ << std::endl;
-	//std::string LongestPrefixOfWord = this->LongestPrefixOfWordInDictionary(Word);
-	//std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(LongestPrefixOfWord, Word);
-	//this->PrintTransducer();
-	//std::cout << Word << " " << this->MinimalExceptWord << " " << LongestPrefixOfWord << std::endl;
 	std::string CommonPrefixOfMinExceptAndWord = CommonPrefix(this->MinimalExceptWord, Word);
 
-	//std::cout << Word << " " << LongestPrefixOfWord << std::endl;
-
 	this->MakeMinimalExceptPrefixInDictionary(CommonPrefixOfMinExceptAndWord);
-	//std::cout << "Afterwards " << this->MinimalExceptWord << std::endl;
+
 	int k = CommonPrefixOfMinExceptAndWord.size();
 	int m = Word.size();
-	//std::cout << k << m << this->T.size() << std::endl;
+
 	//Add new states in T and their proper Delta transitions
 	for (int i = k + 1; i <= m; ++i)
 	{
@@ -152,32 +140,17 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 	//Calculate updates in lambda after that apply them, thus we calculate them with old transducer
 	VecOfVecOfPairCharStr_t UpdatesOfTransitions;
 	UpdatesOfTransitions.resize(this->T.size());
-	//std::cout << __LINE__ << std::endl << k << m;
-	//std::cout << "Crash report" << this->T.size() << __LINE__ << std::endl;
-	//std::cout << "Crash report" <<  __LINE__ << std::endl;
 
-	//udpates part one
-	//possible optimizations
-	//this->PrintTransducer();
 	for (int i = 1; i <= k; ++i)
 	{
-		//std::cout << __LINE__ << " Enter loop " + Word.substr(0, i) <<std::endl;
-		//std::cout << i << " " << Word << std::endl;
 		std::string Substractor = CommonPrefix( this->LambdaTraverse(Word.substr(0, i - 1) ), WordImage);
-		//this->LambdaTraverse(Word.substr(0, i));
 
-		//std::cout << __LINE__ << std::endl;
 		std::string RightOutput = CommonPrefix(this->LambdaTraverse(Word.substr(0, i)), WordImage);
-		//std::cout << "Substractor right output < " << Substractor << " " << RightOutput << std::endl;
 		std::string NewOutput = SubtractStringFromLeft(Substractor, RightOutput);
 
-		UpdatesOfTransitions[i - 1].push_back(std::make_pair(Word[i - 1], 
-			NewOutput
-			//SubtractStringFromLeft(CommonPrefix(this->LambdaTraverse(Word.substr(0, i - 1)), WordImage), CommonPrefix(this->LambdaTraverse(Word.substr(0, i)), WordImage))
-			));
+		UpdatesOfTransitions[i - 1].push_back(std::make_pair(Word[i - 1], NewOutput));
 		
 	}
-	//std::cout << "Crash report" << __LINE__ << std::endl;
 
 	//part two
 	char Sigma;
@@ -188,11 +161,7 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 		for (int j = 0; j < AllLettersMinusOne.size(); ++j)
 		{
 			Sigma = AllLettersMinusOne[j];
-			//std::string Subtractor = CommonPrefix(this->LambdaTraverse(Word.substr(0, i)), WordImage);
-			//std::string RightPart = this->LambdaTraverse(Word.substr(0, i) + Sigma);
-			//std::string Result = SubtractStringFromLeft(Subtractor, RightPart);
 			UpdatesOfTransitions[i].push_back(std::make_pair(Sigma,
-				//Result
 				SubtractStringFromLeft(CommonPrefix(this->LambdaTraverse(Word.substr(0, i)), WordImage), this->LambdaTraverse(Word.substr(0, i) + Sigma))
 				));
 		}
@@ -202,7 +171,6 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 	{
 		std::string OutputWithFirstKLetters = this->LambdaTraverse(Word.substr(0, k));
 		std::string Substractor = CommonPrefix(OutputWithFirstKLetters, WordImage);
-		//std::string Result = SubtractStringFromLeft(Substractor, WordImage);
 		UpdatesOfTransitions[k].push_back(std::make_pair(Word[k],
 			SubtractStringFromLeft(Substractor, WordImage)
 			));
@@ -216,7 +184,6 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 
 	std::string FirstILettersOfWord;
 	std::string OutputWithFirstILetters;
-	//std::cout << k << m << " HERE\n";
 
 	//Update Psi Values
 	for (int i = 1; i <= k; ++i)
@@ -227,13 +194,9 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 			OutputWithFirstILetters = this->LambdaTraverse(FirstILettersOfWord);
 			std::string Subtractor = CommonPrefix(OutputWithFirstILetters, WordImage);
 			std::string Result = SubtractStringFromLeft(Subtractor, OutputWithFirstILetters) + T[i]->GetPsi();
-			T[i]->SetPsi(
-				Result
-				//SubtractStringFromLeft(CommonPrefix(OutputWithFirstILetters, WordImage), this->LambdaTraverse(FirstILettersOfWord)) + T[i]->GetPsi()
-				);
+			T[i]->SetPsi(Result);
 		}
 	}
-
 
 	//Apply updates
 	for (int i = 0; i < UpdatesOfTransitions.size(); ++i)
@@ -244,15 +207,11 @@ void Transducer::AddPairOfWords(std::string& Word, std::string& WordImage)
 		}
 	}
 
-	//Right ?
 	this->MinimalExceptWord = Word;
-	//this->PrintTransducer();
-	//std::cout << "Exit add \n";
 }
 
-std::string Transducer::TraverseAndConcatenateOutputs(std::string Word)
+std::string Transducer::Lookup(std::string Word)
 {
-	//std::shared_ptr<State> CurrentState = this->InitialState;
 	std::shared_ptr<State> CurrentState = this->T[0];
 
 	std::string Result("");
@@ -262,54 +221,30 @@ std::string Transducer::TraverseAndConcatenateOutputs(std::string Word)
 		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
 	}
 	Result += CurrentState->GetPsi();
-	if (!CurrentState->GetIsFinal())
-	{
-		return  Word + " Not Found in the dictionary";
-	}
 	return Result;
 }
-//BAD SOFTWARE ENGINERING DUPICATE CODE
+
 std::string Transducer::LambdaTraverse(std::string Word)
 {
 
 	std::shared_ptr<State> CurrentState = this->T[0];
 	std::string Result("");
-	//std::cout << Word << std::endl;
-	for (int i = 0; i < Word.size(); ++i)
-	{
-		//DANGER
-		Result += CurrentState->GetOutputWithTransitonLetter(Word[i]);
-		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
-
-	}
-	return Result;
-}
-
-std::string Transducer::LambdaPsiTraverse(std::string Word)
-{
-	//this->InitialState ?!?
-	std::shared_ptr<State> CurrentState = this->T[0];
-	std::string Result("");
 	for (int i = 0; i < Word.size(); ++i)
 	{
 		Result += CurrentState->GetOutputWithTransitonLetter(Word[i]);
 		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
+
 	}
-	Result += CurrentState->GetPsi();
 	return Result;
 }
 
 std::string Transducer::LongestPrefixOfWordInDictionary(std::string Word)
 {		
-	//std::cout << "Enter longsst prefix with word , " << Word << std::endl;
-	//std::shared_ptr<State>& CurrentState = this->InitialState;
 	std::shared_ptr<State> CurrentState = this->T[0];
 	for (int i = 0; i < Word.size(); ++i)
 	{
-		//std::cout << CurrentState->HasTransitionWithLetter(Word[i]) << Word[i];
 		if (! (CurrentState->HasTransitionWithLetter(Word[i])))
 		{
-			//std::cout << "HERE = "<< Word.substr(0, i)<< std::endl;
 			return Word.substr(0, i);
 		}
 		CurrentState = CurrentState->GetStateWithTransitionLetter(Word[i]);
